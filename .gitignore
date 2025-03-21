@@ -1,0 +1,87 @@
+
+local player = game.Players.LocalPlayer
+local mouse = player:GetMouse()
+
+-- Ability 1: Summon Trashcans to Yeet Players
+local function summonTrashcan()
+    for _, target in pairs(game.Players:GetPlayers()) do
+        if target ~= player and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+            local trashcan = Instance.new("Part")
+            trashcan.Size = Vector3.new(4, 6, 4)
+            trashcan.Shape = Enum.PartType.Block
+            trashcan.BrickColor = BrickColor.new("Dark green")
+            trashcan.Position = target.Character.HumanoidRootPart.Position + Vector3.new(0, 5, 0)
+            trashcan.Parent = workspace
+            trashcan.Name = "TrashCan"
+
+            -- Yeet the trashcan at players for max chaos
+            trashcan.Velocity = Vector3.new(math.random(-50, 50), 100, math.random(-50, 50))
+
+            -- Destroy the trashcan after 5 seconds to prevent lag
+            game.Debris:AddItem(trashcan, 5)
+        end
+    end
+end
+
+-- Ability 2: Void Kill (Send Players to the Void)
+local function sendToVoid()
+    for _, target in pairs(game.Players:GetPlayers()) do
+        if target ~= player and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+            target.Character.HumanoidRootPart.Position = Vector3.new(0, -500, 0) -- Drop them into the void
+            print("Sent " .. target.Name .. " to the VOID!")
+        end
+    end
+end
+
+-- Ability 3: Trash Ragdoll Mode (Your character collapses inside a trashcan)
+local function trashRagdoll()
+    local character = player.Character or player.CharacterAdded:Wait()
+    if character:FindFirstChild("HumanoidRootPart") then
+        character.HumanoidRootPart.CFrame = CFrame.new(math.random(-50, 50), 5, math.random(-50, 50))
+        character.Humanoid.PlatformStand = true -- Ragdoll effect
+        print("You have collapsed... into the trash.")
+        wait(2)
+        character.Humanoid.PlatformStand = false
+    end
+end
+
+-- Ability 4: Rain Trashcans from the Sky
+local function trashRain()
+    for i = 1, 20 do
+        local trashcan = Instance.new("Part")
+        trashcan.Size = Vector3.new(4, 6, 4)
+        trashcan.Shape = Enum.PartType.Block
+        trashcan.BrickColor = BrickColor.new("Dark green")
+        trashcan.Position = Vector3.new(math.random(-100, 100), 50, math.random(-100, 100))
+        trashcan.Name = "TrashCan"
+        trashcan.Parent = workspace
+
+        -- Trashcan fall physics
+        trashcan.Velocity = Vector3.new(0, -50, 0)
+
+        -- Add a small explosion for dramatic effect
+        local explosion = Instance.new("Explosion")
+        explosion.Position = trashcan.Position
+        explosion.Parent = trashcan
+
+        -- Destroy trashcan after a few seconds
+        game.Debris:AddItem(trashcan, 5)
+    end
+end
+
+-- Keybinds for Troll Abilities: 1, 2, 3, 4
+mouse.KeyDown:Connect(function(key)
+    if key == "1" then
+        print("Summoning trashcans to YEET players!")
+        summonTrashcan()
+    elseif key == "2" then
+        print("Sending players to the VOID!")
+        sendToVoid()
+    elseif key == "3" then
+        print("Collapsing into trash mode!")
+        trashRagdoll()
+    elseif key == "4" then
+        print("Raining TRASHCANS from the sky!")
+        trashRain()
+    end
+end)
